@@ -95,12 +95,6 @@ class AddressBook(UserDict):
                     upcoming.append(f"{record.name.value} - {bd.strftime('%d.%m.%Y')}")
         return upcoming
 
-
-def parse_input(user_input):
-    cmd, *args = user_input.strip().split()
-    return cmd.lower(), args
-
-
 def input_error(func):
     def inner(*args, **kwargs):
         try:
@@ -112,6 +106,11 @@ def input_error(func):
         except IndexError:
             return "Недостатньо аргументів."
     return inner
+
+@input_error
+def parse_input(user_input):
+    cmd, *args = user_input.strip().split()
+    return cmd.lower(), args
 
 
 @input_error
@@ -181,31 +180,33 @@ def main():
     book = AddressBook()
     print("Welcome to the assistant bot!")
     while True:
-        user_input = input("Enter a command: ")
-        command, args = parse_input(user_input)
+        try:
+            user_input = input("Enter a command: ")
+            command, args = parse_input(user_input)
 
-        if command in ["exit", "close"]:
-            print("Good bye!")
-            break
-        elif command == "hello":
-            print("How can I help you?")
-        elif command == "add":
-            print(add_contact(args, book))
-        elif command == "change":
-            print(change_contact(args, book))
-        elif command == "phone":
-            print(get_phone(args, book))
-        elif command == "all":
-            print(show_all(book))
-        elif command == "add-birthday":
-            print(add_birthday(args, book))
-        elif command == "show-birthday":
-            print(show_birthday(args, book))
-        elif command == "birthdays":
-            print(birthdays(book))
-        else:
-            print("Invalid command.")
-
+            if command in ["exit", "close"]:
+                print("Good bye!")
+                break
+            elif command == "hello":
+                print("How can I help you?")
+            elif command == "add":
+                print(add_contact(args, book))
+            elif command == "change":
+                print(change_contact(args, book))
+            elif command == "phone":
+                print(get_phone(args, book))
+            elif command == "all":
+                print(show_all(book))
+            elif command == "add-birthday":
+                print(add_birthday(args, book))
+            elif command == "show-birthday":
+                print(show_birthday(args, book))
+            elif command == "birthdays":
+                print(birthdays(book))
+            else:
+                print("Invalid command.")
+        except ValueError:
+            print("Enter valid command.")
 
 if __name__ == "__main__":
     main()
